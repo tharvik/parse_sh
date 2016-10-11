@@ -1,0 +1,5 @@
+.gitignore
+
+: foreach *.c	|> gcc -g -Wall -Wextra -std=c99 %f -c	|> %B.o
+: *.o		|> gcc %f -lcunit -o %o			|> parse_test
+: parse_test	|> ./parse_test				|>
