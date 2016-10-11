@@ -1,8 +1,5 @@
-//#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-//#include <stdio.h>
-//#include <assert.h>
 #include <ctype.h>
 
 #include "parse_sh.h"
@@ -26,9 +23,20 @@ struct parse_array_str parse_sh(char *to_parse)
 }
 
 	bool quotted = false;
+	bool espace = false;
 
 	for(size_t i = 0; i < to_parse_size; ++i) {
 		char c = to_parse[i];
+
+		if(espace) {
+			out_cursor[0] = c;
+			++out_cursor;
+			espace = false;
+			continue;
+		} else if(c == '\\') {
+			espace = true;
+			continue;
+		}
 
 		if(c == '"') {
 			quotted = !quotted;
