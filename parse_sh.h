@@ -1,3 +1,10 @@
+#ifndef PARSE_SH_H
+#define PARSE_SH_H
+
+#include <stdbool.h>
+
 #include "types.h"
 
-struct parse_array_str parse_sh(char *to_parse);
+bool parse_sh(struct parse_array_str * array, char *to_parse);
+
+#endif

@@ -4,17 +4,15 @@
 
 #include "parse_sh.h"
 
-struct parse_array_str parse_sh(char *to_parse)
+bool parse_sh(struct parse_array_str *array, char *to_parse)
 {
-	struct parse_array_str out = parse_array_str_init();
-
 	size_t const to_parse_size = strlen(to_parse);
 	char *out_str = calloc(to_parse_size, sizeof(*out_str));
 	char *out_cursor = out_str;
 
 #define end_and_push() { \
 	out_cursor[0] = '\0'; \
-	parse_array_str_push(&out, out_str); \
+	parse_array_str_push(array, out_str); \
 }
 
 #define reset_out() { \
@@ -25,23 +23,23 @@ struct parse_array_str parse_sh(char *to_parse)
 	bool quotted = false;
 	bool espace = false;
 
-	for(size_t i = 0; i < to_parse_size; ++i) {
+	for (size_t i = 0; i < to_parse_size; ++i) {
 		char c = to_parse[i];
 
-		if(espace) {
+		if (espace) {
 			out_cursor[0] = c;
 			++out_cursor;
 			espace = false;
 			continue;
-		} else if(c == '\\') {
+		} else if (c == '\\') {
 			espace = true;
 			continue;
 		}
 
-		if(c == '"') {
+		if (c == '"') {
 			quotted = !quotted;
 			continue;
-		} else if(isspace(c) && !quotted) {
+		} else if (isspace(c) && !quotted) {
 			end_and_push();
 			reset_out();
 		} else {
@@ -51,5 +49,5 @@ struct parse_array_str parse_sh(char *to_parse)
 	}
 	end_and_push();
 
-	return out;
+	return true;
 }

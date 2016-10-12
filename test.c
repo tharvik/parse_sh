@@ -4,84 +4,140 @@
 
 #include "parse_sh.h"
 
-void test_trivial_single(void)
+static struct parse_array_str *a;
+
+void test_init()
 {
-	struct parse_array_str a = parse_sh("a");
-	CU_ASSERT(a.size == 1);
-	CU_ASSERT_STRING_EQUAL(a.content[0], "a");
+	a = parse_array_str_init();
 }
 
-void test_trivial_double(void)
+void test_free()
 {
-	struct parse_array_str a = parse_sh("a b");
-	CU_ASSERT(a.size == 2);
-	CU_ASSERT_STRING_EQUAL(a.content[0], "a");
-	CU_ASSERT_STRING_EQUAL(a.content[1], "b");
+	parse_array_str_free(a);
 }
 
-void test_quoted_single(void)
+void test_trivial_single()
 {
-	struct parse_array_str a = parse_sh("\"a\"");
-	CU_ASSERT(a.size == 1);
-	CU_ASSERT_STRING_EQUAL(a.content[0], "a");
+	test_init();
+
+	CU_ASSERT(parse_sh(a, "a"));
+	CU_ASSERT(a->size == 1);
+	CU_ASSERT_STRING_EQUAL(a->content[0], "a");
+
+	test_free();
 }
 
-void test_quoted_double(void)
+void test_trivial_double()
 {
-	struct parse_array_str a = parse_sh("\"a b\"");
-	CU_ASSERT(a.size == 1);
-	CU_ASSERT_STRING_EQUAL(a.content[0], "a b");
+	test_init();
+
+	CU_ASSERT(parse_sh(a, "a b"));
+	CU_ASSERT(a->size == 2);
+	CU_ASSERT_STRING_EQUAL(a->content[0], "a");
+	CU_ASSERT_STRING_EQUAL(a->content[1], "b");
+
+	test_free();
 }
 
-void test_quoted_two_single(void)
+void test_quoted_single()
 {
-	struct parse_array_str a = parse_sh("\"a\" \"b\"");
-	CU_ASSERT(a.size == 2);
-	CU_ASSERT_STRING_EQUAL(a.content[0], "a");
-	CU_ASSERT_STRING_EQUAL(a.content[1], "b");
+	test_init();
+
+	CU_ASSERT(parse_sh(a, "\"a\""));
+	CU_ASSERT(a->size == 1);
+	CU_ASSERT_STRING_EQUAL(a->content[0], "a");
+
+	test_free();
 }
 
-void test_escaped_single(void)
+void test_quoted_double()
 {
-	struct parse_array_str a = parse_sh("\\a");
-	CU_ASSERT(a.size == 1);
-	CU_ASSERT_STRING_EQUAL(a.content[0], "a");
+	test_init();
+
+	CU_ASSERT(parse_sh(a, "\"a b\""));
+	CU_ASSERT(a->size == 1);
+	CU_ASSERT_STRING_EQUAL(a->content[0], "a b");
+
+	test_free();
 }
 
-void test_escaped_space(void)
+void test_quoted_two_single()
 {
-	struct parse_array_str a = parse_sh("a\\ b");
-	CU_ASSERT(a.size == 1);
-	CU_ASSERT_STRING_EQUAL(a.content[0], "a b");
+	test_init();
+
+	CU_ASSERT(parse_sh(a, "\"a\" \"b\""));
+	CU_ASSERT(a->size == 2);
+	CU_ASSERT_STRING_EQUAL(a->content[0], "a");
+	CU_ASSERT_STRING_EQUAL(a->content[1], "b");
+
+	test_free();
 }
 
-void test_escaped_quote(void)
+void test_escaped_single()
 {
-	struct parse_array_str a = parse_sh("a\\\"b");
-	CU_ASSERT(a.size == 1);
-	CU_ASSERT_STRING_EQUAL(a.content[0], "a\"b");
+	test_init();
+
+	CU_ASSERT(parse_sh(a, "\\a"));
+	CU_ASSERT(a->size == 1);
+	CU_ASSERT_STRING_EQUAL(a->content[0], "a");
+
+	test_free();
 }
 
-void test_escaped_quote_double(void)
+void test_escaped_space()
 {
-	struct parse_array_str a = parse_sh("a\\\" b");
-	CU_ASSERT(a.size == 2);
-	CU_ASSERT_STRING_EQUAL(a.content[0], "a\"");
-	CU_ASSERT_STRING_EQUAL(a.content[1], "b");
+	test_init();
+
+	CU_ASSERT(parse_sh(a, "a\\ b"));
+	CU_ASSERT(a->size == 1);
+	CU_ASSERT_STRING_EQUAL(a->content[0], "a b");
+
+	test_free();
 }
 
-void test_quote_escaped(void)
+void test_escaped_quote()
 {
-	struct parse_array_str a = parse_sh("\"a \\b\"");
-	CU_ASSERT(a.size == 1);
-	CU_ASSERT_STRING_EQUAL(a.content[0], "a b");
+	test_init();
+
+	CU_ASSERT(parse_sh(a, "a\\\"b"));
+	CU_ASSERT(a->size == 1);
+	CU_ASSERT_STRING_EQUAL(a->content[0], "a\"b");
+
+	test_free();
 }
 
-void test_quote_escaped_quote(void)
+void test_escaped_quote_double()
 {
-	struct parse_array_str a = parse_sh("\"a \\\" b\"");
-	CU_ASSERT(a.size == 1);
-	CU_ASSERT_STRING_EQUAL(a.content[0], "a \" b");
+	test_init();
+
+	CU_ASSERT(parse_sh(a, "a\\\" b"));
+	CU_ASSERT(a->size == 2);
+	CU_ASSERT_STRING_EQUAL(a->content[0], "a\"");
+	CU_ASSERT_STRING_EQUAL(a->content[1], "b");
+
+	test_free();
+}
+
+void test_quote_escaped()
+{
+	test_init();
+
+	CU_ASSERT(parse_sh(a, "\"a \\b\""));
+	CU_ASSERT(a->size == 1);
+	CU_ASSERT_STRING_EQUAL(a->content[0], "a b");
+
+	test_free();
+}
+
+void test_quote_escaped_quote()
+{
+	test_init();
+
+	CU_ASSERT(parse_sh(a, "\"a \\\" b\""));
+	CU_ASSERT(a->size == 1);
+	CU_ASSERT_STRING_EQUAL(a->content[0], "a \" b");
+
+	test_free();
 }
 
 int main()
@@ -97,19 +153,24 @@ int main()
 		return CU_get_error();
 	}
 
-	if ((CU_add_test(suite, "test of 'a'", test_trivial_single) == NULL) ||
-	    (CU_add_test(suite, "test of 'a b'", test_trivial_double) == NULL) ||
-	    (CU_add_test(suite, "test of '\"a\"'", test_quoted_single) == NULL) ||
-	    (CU_add_test(suite, "test of '\"a b\"'", test_quoted_double) == NULL) ||
-	    (CU_add_test(suite, "test of '\"a\" \"b\"'", test_quoted_two_single) == NULL) ||
-	    (CU_add_test(suite, "test of '\\a'", test_escaped_single) == NULL) ||
-	    (CU_add_test(suite, "test of 'a\\ b'", test_escaped_space) == NULL) ||
-	    (CU_add_test(suite, "test of 'a\\\"b'", test_escaped_quote) == NULL) ||
-	    (CU_add_test(suite, "test of 'a\\\" b'", test_escaped_quote_double) == NULL) ||
-	    (CU_add_test(suite, "test of '\"a \\b\"'", test_quote_escaped) == NULL) ||
-	    (CU_add_test(suite, "test of '\"a \\\" b\"'", test_quote_escaped_quote) == NULL) ||
-	    false)
-	{
+	ptrdiff_t e = (ptrdiff_t) ~0;
+
+#define add_test(n, f) \
+	e &= (ptrdiff_t) CU_add_test(suite, n, f);
+
+	add_test("test of 'a'", test_trivial_single);
+	add_test("test of 'a b'", test_trivial_double);
+	add_test("test of '\"a\"'", test_quoted_single);
+	add_test("test of '\"a b\"'", test_quoted_double);
+	add_test("test of '\"a\" \"b\"'", test_quoted_two_single);
+	add_test("test of '\\a'", test_escaped_single);
+	add_test("test of 'a\\ b'", test_escaped_space);
+	add_test("test of 'a\\\"b'", test_escaped_quote);
+	add_test("test of 'a\\\" b'", test_escaped_quote_double);
+	add_test("test of '\"a \\b\"'", test_quote_escaped);
+	add_test("test of '\"a \\\" b\"'", test_quote_escaped_quote);
+
+	if(e == NULL) {
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
