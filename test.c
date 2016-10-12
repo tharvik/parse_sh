@@ -140,6 +140,24 @@ void test_quote_escaped_quote()
 	test_free();
 }
 
+void test_fail_single_quote()
+{
+	test_init();
+
+	CU_ASSERT_FALSE(parse_sh(a, "\""));
+
+	test_free();
+}
+
+void test_fail_missing_end_quote()
+{
+	test_init();
+
+	CU_ASSERT_FALSE(parse_sh(a, "\"a b\" \"c d"));
+
+	test_free();
+}
+
 int main()
 {
 	CU_pSuite suite = NULL;
@@ -169,6 +187,9 @@ int main()
 	add_test("test of 'a\\\" b'", test_escaped_quote_double);
 	add_test("test of '\"a \\b\"'", test_quote_escaped);
 	add_test("test of '\"a \\\" b\"'", test_quote_escaped_quote);
+
+	add_test("test fail of '\"'", test_fail_single_quote);
+	add_test("test fail of '\"a b\" \"c d'", test_fail_missing_end_quote);
 
 	if(e == NULL) {
 		CU_cleanup_registry();

@@ -49,5 +49,8 @@ bool parse_sh(struct parse_array_str *array, char *to_parse)
 	}
 	end_and_push();
 
+	if (quotted)
+		return false;
+
 	return true;
 }
