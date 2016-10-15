@@ -191,7 +191,7 @@ int main()
 	add_test("test fail of '\"'", test_fail_single_quote);
 	add_test("test fail of '\"a b\" \"c d'", test_fail_missing_end_quote);
 
-	if(e == NULL) {
+	if(e == 0) {
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
