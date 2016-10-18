@@ -12,7 +12,8 @@ bool parse_sh(struct parse_array_str *array, char *to_parse)
 
 #define end_and_push() { \
 	out_cursor[0] = '\0'; \
-	parse_array_str_push(array, out_str); \
+	if (strcmp(out_str, "") != 0) \
+		parse_array_str_push(array, out_str); \
 }
 
 #define reset_out() { \

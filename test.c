@@ -16,6 +16,17 @@ static void test_free()
 	parse_array_str_free(a);
 }
 
+static void test_trivial_empty()
+{
+	test_init();
+
+	CU_ASSERT(parse_sh(a, ""));
+	CU_ASSERT(a->size == 0);
+
+	test_free();
+}
+
+
 static void test_trivial_single()
 {
 	test_init();
@@ -176,6 +187,7 @@ int main()
 #define add_test(n, f) \
 	e &= (ptrdiff_t) (0 + CU_add_test(suite, n, f));
 
+	add_test("test of ''", test_trivial_empty);
 	add_test("test of 'a'", test_trivial_single);
 	add_test("test of 'a b'", test_trivial_double);
 	add_test("test of '\"a\"'", test_quoted_single);
