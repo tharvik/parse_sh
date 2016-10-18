@@ -3,17 +3,15 @@ dist: trusty
 
 language: c
 
-compiler:
-  - clang
-  - gcc
-
 addons:
   apt:
     sources:
       - sourceline: 'deb http://ppa.launchpad.net/anatol/tup/ubuntu precise main'
     packages:
+      - libcunit1
       - libcunit1-dev
       - tup
+      - valgrind
 
 script:
   - tup

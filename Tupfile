@@ -1,5 +1,5 @@
 .gitignore
 
 : foreach *.c	|> @(CC) @(CFLAGS) %f -c			|> %B.o
-: *.o		|> @(CC) @(LDFLAGS) %f -o %o			|> parse_test
+: *.o		|> @(CC) %f @(LDFLAGS) -o %o			|> parse_test
 : parse_test	|> valgrind --error-exitcode=1 ./parse_test	|>
