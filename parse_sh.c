@@ -7,7 +7,7 @@
 bool parse_sh(struct parse_array_str *array, char *to_parse)
 {
 	size_t const to_parse_size = strlen(to_parse);
-	char *out_str = calloc(to_parse_size, sizeof(*out_str));
+	char *out_str = calloc(to_parse_size + 1, sizeof(*out_str));
 	char *out_cursor = out_str;
 
 #define end_and_push() { \
