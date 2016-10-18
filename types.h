@@ -9,7 +9,7 @@ struct parse_array_str {
 	char **content;
 };
 
-struct parse_array_str *parse_array_str_init();
+struct parse_array_str *parse_array_str_init(void);
 void parse_array_str_free(struct parse_array_str *array);
 
 bool parse_array_str_push(struct parse_array_str *array, char *elem);

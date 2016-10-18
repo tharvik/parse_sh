@@ -1,5 +1,5 @@
 .gitignore
 
-: foreach *.c	|> gcc -g -Wall -Wextra -std=c99 %f -c	|> %B.o
-: *.o		|> gcc %f -lcunit -o %o			|> parse_test
-: parse_test	|> ./parse_test				|>
+: foreach *.c	|> @(CC) @(CFLAGS) %f -c			|> %B.o
+: *.o		|> @(CC) @(LDFLAGS) %f -o %o			|> parse_test
+: parse_test	|> valgrind --error-exitcode=1 ./parse_test	|>

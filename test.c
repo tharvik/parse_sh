@@ -6,17 +6,17 @@
 
 static struct parse_array_str *a;
 
-void test_init()
+static void test_init()
 {
 	a = parse_array_str_init();
 }
 
-void test_free()
+static void test_free()
 {
 	parse_array_str_free(a);
 }
 
-void test_trivial_single()
+static void test_trivial_single()
 {
 	test_init();
 
@@ -27,7 +27,7 @@ void test_trivial_single()
 	test_free();
 }
 
-void test_trivial_double()
+static void test_trivial_double()
 {
 	test_init();
 
@@ -39,7 +39,7 @@ void test_trivial_double()
 	test_free();
 }
 
-void test_quoted_single()
+static void test_quoted_single()
 {
 	test_init();
 
@@ -50,7 +50,7 @@ void test_quoted_single()
 	test_free();
 }
 
-void test_quoted_double()
+static void test_quoted_double()
 {
 	test_init();
 
@@ -61,7 +61,7 @@ void test_quoted_double()
 	test_free();
 }
 
-void test_quoted_two_single()
+static void test_quoted_two_single()
 {
 	test_init();
 
@@ -73,7 +73,7 @@ void test_quoted_two_single()
 	test_free();
 }
 
-void test_escaped_single()
+static void test_escaped_single()
 {
 	test_init();
 
@@ -84,7 +84,7 @@ void test_escaped_single()
 	test_free();
 }
 
-void test_escaped_space()
+static void test_escaped_space()
 {
 	test_init();
 
@@ -95,7 +95,7 @@ void test_escaped_space()
 	test_free();
 }
 
-void test_escaped_quote()
+static void test_escaped_quote()
 {
 	test_init();
 
@@ -106,7 +106,7 @@ void test_escaped_quote()
 	test_free();
 }
 
-void test_escaped_quote_double()
+static void test_escaped_quote_double()
 {
 	test_init();
 
@@ -118,7 +118,7 @@ void test_escaped_quote_double()
 	test_free();
 }
 
-void test_quote_escaped()
+static void test_quote_escaped()
 {
 	test_init();
 
@@ -129,7 +129,7 @@ void test_quote_escaped()
 	test_free();
 }
 
-void test_quote_escaped_quote()
+static void test_quote_escaped_quote()
 {
 	test_init();
 
@@ -140,7 +140,7 @@ void test_quote_escaped_quote()
 	test_free();
 }
 
-void test_fail_single_quote()
+static void test_fail_single_quote()
 {
 	test_init();
 
@@ -149,7 +149,7 @@ void test_fail_single_quote()
 	test_free();
 }
 
-void test_fail_missing_end_quote()
+static void test_fail_missing_end_quote()
 {
 	test_init();
 
@@ -174,7 +174,7 @@ int main()
 	ptrdiff_t e = (ptrdiff_t) ~0;
 
 #define add_test(n, f) \
-	e &= (ptrdiff_t) CU_add_test(suite, n, f);
+	e &= (ptrdiff_t) (0 + CU_add_test(suite, n, f));
 
 	add_test("test of 'a'", test_trivial_single);
 	add_test("test of 'a b'", test_trivial_double);
